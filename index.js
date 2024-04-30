@@ -23,11 +23,14 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const touristSpotCollection = client
       .db("SEAventureDb")
       .collection("touristSpots");
+    const defaultSpotCollection = client
+      .db("SEAventureDb")
+      .collection("defaultSpots");
 
     app.get("/touristSpots", async (req, res) => {
       const cursor = touristSpotCollection.find();
@@ -35,7 +38,15 @@ async function run() {
       res.send(result);
     });
 
-    // view details page
+    // for heme default
+
+    app.get("/defultTouristSpots", async (req, res) => {
+      const cursor = defaultSpotCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // for view details page
 
     app.get("/touristSpots/:id", async (req, res) => {
       const id = req.params.id;
