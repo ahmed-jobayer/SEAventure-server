@@ -29,6 +29,12 @@ async function run() {
       .db("SEAventureDb")
       .collection("touristSpots");
 
+    app.get("/touristSpots", async (req, res) => {
+      const cursor = touristSpotCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
     app.post("/touristSpots", async (req, res) => {
       const newToutistSpot = req.body;
       console.log(newToutistSpot);
