@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { MongoClient, ServerApiVersion } = require("mongodb");
-require('dotenv').config()
+require("dotenv").config();
 const app = express();
 const port = process.env.port || 5000;
 
@@ -9,11 +9,7 @@ const port = process.env.port || 5000;
 app.use(cors());
 app.use(express.json());
 
-
-
-const uri =
-  `mongodb+srv://${process.env.DB_SEAVENTURE}:${process.env.SECRET_KEY}@cluster0.oapnwos.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-
+const uri = `mongodb+srv://${process.env.DB_SEAVENTURE}:${process.env.SECRET_KEY}@cluster0.oapnwos.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -29,11 +25,16 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    app.post('/touristSpots', async(req, res) => {
-        const newToutistSpot = req.body;
-        console.log(newToutistSpot)
-        
-    })
+    const touristSpotCollection = client
+      .db("SEAventureDb")
+      .collection("touristSpots");
+
+    app.post("/touristSpots", async (req, res) => {
+      const newToutistSpot = req.body;
+      console.log(newToutistSpot);
+      const result = await touristSpotCollection.insertOne(newToutistSpot);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
