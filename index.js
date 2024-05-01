@@ -62,6 +62,40 @@ async function run() {
       res.send(result);
     });
 
+    // update
+    app.put("/touristSpots/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedSpot = req.body
+      console.log('vfk')
+      const spot = {
+        $set: {
+          image: updatedSpot.image,
+          tourists_spot_name: updatedSpot.tourists_spot_name,
+          country_name: updatedSpot.country_name,
+          location: updatedSpot.location,
+          short_description: updatedSpot.short_description,
+          average_cost: updatedSpot.average_cost,
+          seasonality: updatedSpot.seasonality,
+          travel_time: updatedSpot.travel_time,
+          total_visitors_per_year: updatedSpot.total_visitors_per_year,
+        },
+      };
+      const result = await  touristSpotCollection.updateOne(filter, spot, options)
+      res.send(result)
+     
+    });
+
+    // delete operation
+
+    app.delete("/touristSpots/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await touristSpotCollection.deleteOne(query);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
